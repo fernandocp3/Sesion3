@@ -36,7 +36,7 @@ class CalculadoraTest {
 	
 	@Test
 	void testResta() {
-		assertEquals(1, Calculadora.resta(2,3));
+		assertEquals(1, Calculadora.resta(3,2));
 	}
 	
 	@Test
@@ -46,7 +46,7 @@ class CalculadoraTest {
 	
 	@Test
 	void testDivide() {
-		assertEquals(2, Calculadora.divide(2,3));
+		assertEquals(2, Calculadora.divide(4,2));
 	}
 
 }
