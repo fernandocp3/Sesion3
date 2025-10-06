@@ -8,13 +8,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import pkg.Cuenta;
+
 class CuentaTest {
 	
-	Cuenta cuenta
+	public static Cuenta cuenta;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		this.cuenta = new Cuenta(0);
+		this.cuenta = new Cuenta(0.0);
 	}
 
 	@AfterAll
@@ -31,13 +33,13 @@ class CuentaTest {
 
 	@Test
 	void testIngresar() {
-		cuenta.ingresa(500);
+		cuenta.ingresar(500.0);
 		assertEquals(500, cuenta.getSaldo());
 	}
 	
 	@Test
 	void testRetirar() {
-		cuenta.retirar(-500);
+		cuenta.retirar(-500.0);
 		assertEquals(-500, cuenta.getSaldo());
 	}
 
