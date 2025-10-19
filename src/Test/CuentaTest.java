@@ -9,14 +9,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import pkg.Cuenta;
+import pkg.Movimiento;
 
 class CuentaTest {
 	
 	public static Cuenta cuenta;
+	public static Movimiento movimiento;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		cuenta = new Cuenta(0.0);
+		cuenta = new Cuenta("12345", "Juan Pérez", 0.0);
 	}
 
 	@AfterAll
@@ -25,7 +27,7 @@ class CuentaTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		cuenta.setSaldo(0.0);
+		cuenta = new Cuenta("12345", "Juan Pérez", 0.0);
 	}
 
 	@AfterEach
@@ -33,28 +35,28 @@ class CuentaTest {
 	}
 
 	@Test
-	void testIngresar() {
-		cuenta.ingresar(500.0);
-		assertEquals(500, cuenta.getSaldo());
-	}
-	
-	@Test
-	void testRetirar() {
-		cuenta.retirar(500.0);
-		assertEquals(0, cuenta.getSaldo());
-	}
-	
-	@Test
-	void testNoPermiteIngresoNegativo() {
-	    cuenta.ingresar(-100);
-	    assertEquals(0, cuenta.getSaldo());
+	void testReintegro() {
+	    cuenta.ingreso(500.0);
+	    cuenta.reintegro(200.0);
+	    assertEquals(300.0, cuenta.getSaldo());
+	    assertEquals(2, cuenta.getMovimientos().size());
+	    assertEquals(Movimiento.Signo.D, cuenta.getMovimientos().get(1).getSigno());
 	}
 
 	@Test
-	void testNoPermiteRetirarMasDeSaldo() {
-	    cuenta.ingresar(100);
-	    cuenta.retirar(200);
-	    assertEquals(100, cuenta.getSaldo());
+	void testNoPermiteReintegroMayorQueSaldo() {
+	    cuenta.ingreso(100.0);
+	    cuenta.reintegro(200.0);
+	    assertEquals(100.0, cuenta.getSaldo()); // no se permite
+	}
+
+	@Test
+	void testMovimientoIngreso() {
+	    cuenta.ingreso(150.0);
+	    Movimiento m = cuenta.getMovimientos().get(0);
+	    assertEquals(150.0, m.getImporte());
+	    assertEquals(Movimiento.Signo.H, m.getSigno());
+	    assertEquals("Ingreso en cuenta", m.getDetalle());
 	}
 
 }
