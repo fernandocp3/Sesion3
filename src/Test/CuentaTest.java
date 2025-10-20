@@ -44,11 +44,12 @@ class CuentaTest {
 	}
 
 	@Test
-	void testNoPermiteReintegroMayorQueSaldo() {
+	void testPermiteReintegroHastaLimiteDescubierto() {
 	    cuenta.ingreso(100.0);
 	    cuenta.reintegro(200.0);
-	    assertEquals(100.0, cuenta.getSaldo()); // no se permite
+	    assertEquals(-100.0, cuenta.getSaldo());
 	}
+
 
 	@Test
 	void testMovimientoIngreso() {
@@ -58,5 +59,30 @@ class CuentaTest {
 	    assertEquals(Movimiento.Signo.H, m.getSigno());
 	    assertEquals("Ingreso en cuenta", m.getDetalle());
 	}
+	
+	@Test
+	void test0014() {
+	    // Inicialización
+	    Cuenta c1 = new Cuenta("12345", "Juan", 50.0);
+	    Cuenta c2 = new Cuenta("67890", "María", 0.0);
+
+	    c1.reintegro(200.0);   // (1)
+	    c2.reintegro(350.0);   // (2)
+	    c1.ingreso(100.0);     // (3)
+	    c2.reintegro(200.0);   // (4)
+	    c2.reintegro(150.0);   // (5)
+	    c1.reintegro(200.0);   // (6)
+	    c2.ingreso(50.0);      // (7)
+	    c2.reintegro(100.0);   // (8)
+
+	    assertEquals(-250.0, c1.getSaldo(), "Saldo final incorrecto en cuenta 12345");
+	    assertEquals(-450.0, c2.getSaldo(), "Saldo final incorrecto en cuenta 67890");
+
+	    // Verificar errores registrados (pasos 4 y 8)
+	    assertEquals(2, c2.getErrores().size(), "Deben registrarse dos errores en la cuenta 67890");
+	    assertTrue(c2.getErrores().get(0).contains("Fondos insuficientes"));
+	    assertTrue(c2.getErrores().get(1).contains("Fondos insuficientes"));
+	}
+
 
 }

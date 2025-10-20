@@ -1,8 +1,9 @@
 package pkg;
 
 public class Movimiento {
-	public enum Signo {D, H};
-	
+
+    public enum Signo { D, H } // D = Débito (reintegro), H = Haber (ingreso)
+
     private Double importe;
     private Signo signo;
     private String detalle;
